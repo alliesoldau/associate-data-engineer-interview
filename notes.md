@@ -4,7 +4,7 @@
 3. Looking at the `client_records.jsonl` file, what questions do you have about the meaning of the data?
 4. From the format of this file, write down a database schema.
    * It's probably easiest if you turn in some equivalent to a bunch of create table statements in your return project
-    * Diagrams available at [DBDiagram](https://dbdiagram.io/d/6453cdf9dca9fb07c483a5b7)
+    * Diagrams available at [DBDiagram](https://dbdiagram.io/d/6453cdf9dca9fb07c483a5b7).
 5. Now, write some code to clean this data, and insert it into your database. Here are some things to think about when writing your code:
    1. What concerns do you see?
    2. What choices have you made to clean the data?
