@@ -1,1 +1,1 @@
-(DBDiagram)[https://dbdiagram.io/d/6453cdf9dca9fb07c483a5b7]
+(DBDiagram) [https://dbdiagram.io/d/6453cdf9dca9fb07c483a5b7]
