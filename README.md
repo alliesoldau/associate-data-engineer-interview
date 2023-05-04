@@ -1,4 +1,4 @@
-Allie's Version
+Allie Version
 
 # Associate Data Engineer Project Plan Interview
 > This repository contains the project plan instructions for the Associate Data Engineer role.
