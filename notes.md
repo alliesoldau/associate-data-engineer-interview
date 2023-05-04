@@ -1,4 +1,4 @@
-# Instructions test
+# Instructions
 1. Clone this repository to your local computer.
 2. Review the README for instructions.
 3. Looking at the `client_records.jsonl` file, what questions do you have about the meaning of the data?
