@@ -5,6 +5,29 @@
 4. From the format of this file, write down a database schema.
    * It's probably easiest if you turn in some equivalent to a bunch of create table statements in your return project
     * Diagrams available at [DBDiagram](https://dbdiagram.io/d/6453cdf9dca9fb07c483a5b7).
+    * create_table "contacts", force: :cascade do |t|
+    t.datetime "time_call_began"
+    t.datetime "time_call_ended"
+    t.integer "initial_counselor_id"
+    t.integer "total_counslors"
+    t.integer "total_transfers"
+    t.string "issues_discussed"
+    t.integer "call_rating"
+    t.integer "initial_risk_level"
+    t.string "client_pronouns"
+    t.string "client_name"
+    t.string "client_location"
+  end
+
+  create_table "counselors", force: :cascade do |t|
+    t.string "name"
+  end
+
+  create_table "transfers", force: :cascade do |t|
+    t.integer "contact_id"
+    t.integer "counselor_id"
+    t.datetime "timestamp"
+  end
 5. Now, write some code to clean this data, and insert it into your database. Here are some things to think about when writing your code:
    1. What concerns do you see?
    2. What choices have you made to clean the data?
