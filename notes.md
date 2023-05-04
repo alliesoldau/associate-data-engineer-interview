@@ -30,6 +30,11 @@
   end
 5. Now, write some code to clean this data, and insert it into your database. Here are some things to think about when writing your code:
    1. What concerns do you see?
+      * Privacy concerns
+      * COPPA concerns
+      * PII concerns
+      * Values are formatted differently, eg: \"Yu Yamada"\ vs. 'Yu Yamada'
+      * Some transfer_timestamps are empty, so need to make sure we deal with empty values correctly so as not to confuse ourselves eg: A timestamp converting to a datetime with all 0s could confuse the query into think there was a transfer when there wasn't
    2. What choices have you made to clean the data?
    3. What choices have you made about the schema? Is this a relational database schema, or a big data one? (both choices are fine, just justify and explain yourself)
    4. If you were to scale your parsing code, what libraries/cloud technologies/strategies would you use to do so?
