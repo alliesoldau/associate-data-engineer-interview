@@ -35,6 +35,7 @@
       * PII concerns
       * Values are formatted differently, eg: \"Yu Yamada"\ vs. 'Yu Yamada'
       * Some transfer_timestamps are empty, so need to make sure we deal with empty values correctly so as not to confuse ourselves eg: A timestamp converting to a datetime with all 0s could confuse the query into think there was a transfer when there wasn't
+      * Timestamps don't have a timezone
    2. What choices have you made to clean the data?
    3. What choices have you made about the schema? Is this a relational database schema, or a big data one? (both choices are fine, just justify and explain yourself)
    4. If you were to scale your parsing code, what libraries/cloud technologies/strategies would you use to do so?
