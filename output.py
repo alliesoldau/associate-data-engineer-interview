@@ -25,10 +25,30 @@ while counter < len(names):
     total_cases_with_transfers = number_of_cases + number_of_transfers
     output_data.append(total_cases_with_transfers)
     # find the average risk level for original cases and transfers
-    # cursor.execute('SELECT AVG(*) FROM Contacts WHERE initial_counselor_id=?', (counselor_id,))
-    cursor.execute('insert into Output(COUNSELOR_NAME, DAY, NUMBER_OF_CASES) values (?,?,?)', output_data,)
+    # since im doing it between original cases and transfers I can't use the AVG method
+    # instead I need to SUM and divide the risk levels
+    cursor.execute('SELECT SUM(initial_risk_level), SUM(call_rating) FROM Contacts WHERE initial_counselor_id=?', (counselor_id,))
+    contacts_data = ((cursor.fetchall())[0])
+    sum_case_risk_levels = contacts_data[0]
+    sum_case_ratings = contacts_data[1]
+    cursor.execute('SELECT contact_id FROM Transfers WHERE counselor_id=?', (counselor_id,))
+    transfer_contact_ids = (cursor.fetchall())
+    sum_transfer_risk_levels = 0
+    sum_transfer_rating_levels = 0
+    for contact_id in transfer_contact_ids:
+        cursor.execute('SELECT initial_risk_level, call_rating FROM Contacts WHERE id=?', (contact_id[0],))
+        transfers_data = ((cursor.fetchall())[0])
+        sum_transfer_risk_levels = sum_transfer_risk_levels + transfers_data[0]
+        sum_transfer_rating_levels = sum_transfer_rating_levels + transfers_data[1]
+    total_sum_risk_level = sum_case_risk_levels + sum_transfer_risk_levels
+    average_risk_level = total_sum_risk_level / total_cases_with_transfers
+    # DRAWBACK if a chat is transferred BACK to a counselor that already had it then it will consider that contact more than once in the average
+    output_data.append(average_risk_level)
+    total_sum_ratings = sum_case_ratings + sum_transfer_rating_levels
+    average_ratings = total_sum_ratings / total_cases_with_transfers
+    output_data.append(average_ratings)
+    cursor.execute('insert into Output(COUNSELOR_NAME, DAY, NUMBER_OF_CASES, AVERAGE_RISK_LEVEL, AVERAGE_RATING) values (?,?,?,?,?)', output_data,)
     counter += 1
-
 
 # 2. The maximum number of concurrent cases handled by trevor at any time
 # 3. A list of counselors who dealt with more than one concurrent cases
