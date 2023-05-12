@@ -5,11 +5,11 @@
 4. From the format of this file, write down a database schema.
    * It's probably easiest if you turn in some equivalent to a bunch of create table statements in your return project
     * Diagrams available at [DBDiagram](https://dbdiagram.io/d/6453cdf9dca9fb07c483a5b7).
-    * create_table "contacts", force: :cascade do |t|
+
+   create_table "contacts", force: :cascade do |t|
     t.datetime "time_call_began"
     t.datetime "time_call_ended"
     t.integer "initial_counselor_id"
-    t.integer "total_counslors"
     t.integer "total_transfers"
     t.string "issues_discussed"
     t.integer "call_rating"
@@ -34,9 +34,13 @@
       * COPPA concerns
       * PII concerns
       * Values are formatted differently, eg: \"Yu Yamada"\ vs. 'Yu Yamada'
-      * Some transfer_timestamps are empty, so need to make sure we deal with empty values correctly so as not to confuse ourselves eg: A timestamp converting to a datetime with all 0s could confuse the query into think there was a transfer when there wasn't
+      * Single transfer timestamps are formatted differently than mutli transfer timestamps
       * Timestamps don't have a timezone
    2. What choices have you made to clean the data?
+      * Make timestamp format consistent
+      * Remove extraneous symbols from strings (like [ and "')
+      * Split data into 3 tables with joins to make data analysis cleaner
+      * Added additional columns since the data is now split up (eg: initial_counselor_id and total_transfers)
    3. What choices have you made about the schema? Is this a relational database schema, or a big data one? (both choices are fine, just justify and explain yourself)
    4. If you were to scale your parsing code, what libraries/cloud technologies/strategies would you use to do so?
 4. Now, write queries or code to answer the following questions again your populated database:

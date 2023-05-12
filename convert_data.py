@@ -75,7 +75,7 @@ for row in client_records:
     current_contact_id = cursor.lastrowid
     # transfer data
     if total_transfers > 0:
-        timestamp = list(row[c] for c in ['transfer_timestamps'])
+        timestamp = tuple(row[c] for c in ['transfer_timestamps'])
         timestamps = timestamp[0]
         for i in bad_chars_no_space:
             timestamps = timestamps.replace(i, '')
@@ -106,9 +106,12 @@ for row in client_records:
             current_counselor_tuple = current_counselor[0]
             current_counselor_id = current_counselor_tuple[0]
             transfer.append(current_counselor_id)
-            transfer.append(timestamps)
+            currentDateTime = timestamps[18:-1]
+            currentDateTimeArray = currentDateTime.split(", ")
+            dateTimeFormatted = ('%s-0%s-0%s 0%s:%s:00' % (currentDateTimeArray[0], currentDateTimeArray[1], currentDateTimeArray[2], currentDateTimeArray[3], currentDateTimeArray[4]))
+            dateTime_obj = datetime.strptime(dateTimeFormatted, '%Y-%m-%d %H:%M:%S')
+            transfer.append(dateTime_obj)
             cursor.execute('insert into Transfers(contact_id, counselor_id, timestamp) values (?,?,?)', transfer)
-            counter += 1
 # TO DO: make transfer table
 # TO DO: if value is empty have value be nil?
 connection.commit()
