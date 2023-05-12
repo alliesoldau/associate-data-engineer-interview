@@ -46,6 +46,8 @@ for row in client_records:
                 cursor.execute('insert into Counselors(name) values (?)', (currentName,))
             counter += 1
     # contacts data
+    # TO DO: fix pronouns so that they don't have the quotes. if its an array we can use it easier
+    # TO DO: fix other strings to remove quotes 
     contact = list(row[c] for c in columns_contacts)
     cursor.execute('SELECT id FROM Counselors WHERE name=?', (initial_counselor,))
     initial_counselor_tuple = cursor.fetchall()
@@ -53,13 +55,8 @@ for row in client_records:
     contact.append(initial_counselor_id[0])
     contact.append(total_transfers)
     cursor.execute('insert into Contacts(time_call_began, time_call_ended, issues_discussed, call_rating, initial_risk_level, client_pronouns, client_name, client_location, initial_counelor_id, total_transfers) values (?,?,?,?,?,?,?,?,?,?)', contact)
-    # TO DO: clean the data now that you can grad individual items
-    # NOTICE: arrays seem to always have quotes, what's up with that
-    # FOR RAW DATA FULL TABLE # cursor.execute('insert into ClientRecords values (?,?,?,?,?,?,?,?,?,?)', value)
 
-
-# TO DO: next I need to create my 3 different tables
+# TO DO: make transfer table
 # TO DO: if value is empty have value be nil?
-# TO DO: parse data into its proper columns
 connection.commit()
 connection.close()
