@@ -16,7 +16,7 @@ cursor = connection.cursor()
 
 # create tables
 cursor.execute('Create Table if not exists Counselors (id integer primary key, name string)')
-cursor.execute('Create Table if not exists Contacts (id integer primary key, time_call_began datetime, time_call_ended datetime, call_rating integer, initial_risk_level integer, client_name string, client_location string, client_pronouns string, issues_discussed string, initial_counelor_id integer, total_transfers integer)')
+cursor.execute('Create Table if not exists Contacts (id integer primary key, time_call_began datetime, time_call_ended datetime, call_rating integer, initial_risk_level integer, client_name string, client_location string, client_pronouns string, issues_discussed string, initial_counselor_id integer, total_transfers integer)')
 cursor.execute('Create Table if not exists Transfers (id integer primary key, contact_id integer, counselor_id integer, timestamp datetime)')
 # define base columns for contacts to save time
 columns_contacts = ['time_call_began','time_call_ended', 'call_rating', 'initial_risk_level', 'client_name', 'client_location']
@@ -68,7 +68,7 @@ for row in client_records:
     contact.append(initial_counselor_id)
     # total transfers was calculated above by the number of names
     contact.append(total_transfers)
-    cursor.execute('insert into Contacts(time_call_began, time_call_ended, call_rating, initial_risk_level, client_name, client_location, client_pronouns, issues_discussed, initial_counelor_id, total_transfers) values (?,?,?,?,?,?,?,?,?,?)', contact)
+    cursor.execute('insert into Contacts(time_call_began, time_call_ended, call_rating, initial_risk_level, client_name, client_location, client_pronouns, issues_discussed, initial_counselor_id, total_transfers) values (?,?,?,?,?,?,?,?,?,?)', contact)
     current_contact_id = cursor.lastrowid
     
     # TRANSFERS TABLE DATA
@@ -98,7 +98,6 @@ for row in client_records:
                 pointer1 += 21
                 pointer2 += 21
                 counter += 1
-
 
 connection.commit()
 connection.close()
