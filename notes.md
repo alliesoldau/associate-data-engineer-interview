@@ -36,12 +36,16 @@
       * Values are formatted differently, eg: \"Yu Yamada"\ vs. 'Yu Yamada'
       * Single transfer timestamps are formatted differently than mutli transfer timestamps
       * Timestamps don't have a timezone
+      * If 2 counselors have the same name we have no way of knowing if they're 2 different people -> an improvement would be to assign each counselor a unique employee ID
    2. What choices have you made to clean the data?
       * Make timestamp format consistent
       * Remove extraneous symbols from strings (like [ and "')
       * Split data into 3 tables with joins to make data analysis cleaner
       * Added additional columns since the data is now split up (eg: initial_counselor_id and total_transfers)
    3. What choices have you made about the schema? Is this a relational database schema, or a big data one? (both choices are fine, just justify and explain yourself)
+      * This is a relational database 
+      * I wanted to use a relational database to take advantage of joins and reduce repetitive data
+      * This will make my SQL queries more efficient
    4. If you were to scale your parsing code, what libraries/cloud technologies/strategies would you use to do so?
 4. Now, write queries or code to answer the following questions again your populated database:
    1. Create an output csv with the data schema:
