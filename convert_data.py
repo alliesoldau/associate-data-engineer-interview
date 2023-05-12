@@ -2,7 +2,6 @@ import json
 import sqlite3
 from datetime import datetime
 
-
 # create database
 connection = sqlite3.connect('client_records.sqlite')
 cursor = connection.cursor()
@@ -17,7 +16,7 @@ with open('client_records.json') as f:
     for line in f:
         client_records.append(json.loads(line))
 
-# define columns for contacts and transfers
+# define base columns for contacts
 columns_contacts = ['time_call_began','time_call_ended', 'call_rating', 'initial_risk_level', 'client_name', 'client_location']
 
 # loop through client_records and add data to our table 
@@ -32,6 +31,7 @@ for row in client_records:
     currentName = []
     if len(names) > 0:
         counter = 0
+        counselor_transfers = []
         while counter < len(names):
             currentName = names[counter]
             # initializing bad_chars_list
@@ -45,6 +45,7 @@ for row in client_records:
             if currentName not in uniqueNames:
                 uniqueNames.append(currentName)
                 cursor.execute('insert into Counselors(name) values (?)', (currentName,))
+            counselor_transfers.append(currentName)
             counter += 1
     # contacts data
     contact = list(row[c] for c in columns_contacts)
@@ -86,8 +87,11 @@ for row in client_records:
         if total_transfers > 1:
             while counter < total_transfers:
                 transfer = [current_contact_id]
-                # PLACE HOLDER
-                transfer.append(16)
+                cursor.execute('SELECT id FROM Counselors WHERE name=?', (counselor_transfers[counter + 1],))
+                current_counselor = cursor.fetchall()
+                current_counselor_tuple = current_counselor[0]
+                current_counselor_id = current_counselor_tuple[0]
+                transfer.append(current_counselor_id)
                 currentDateTime = timestamps[pointer1:pointer2]
                 dateTime_obj = datetime.strptime(currentDateTime, '%Y-%m-%d %H:%M:%S')
                 transfer.append(dateTime_obj)
@@ -97,8 +101,11 @@ for row in client_records:
                 counter += 1
         if total_transfers == 1:
             transfer = [current_contact_id]
-            # PLACE HOLDER
-            transfer.append(16)
+            cursor.execute('SELECT id FROM Counselors WHERE name=?', (counselor_transfers[1],))
+            current_counselor = cursor.fetchall()
+            current_counselor_tuple = current_counselor[0]
+            current_counselor_id = current_counselor_tuple[0]
+            transfer.append(current_counselor_id)
             transfer.append(timestamps)
             cursor.execute('insert into Transfers(contact_id, counselor_id, timestamp) values (?,?,?)', transfer)
             counter += 1
