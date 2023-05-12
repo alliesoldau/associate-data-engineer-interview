@@ -2,6 +2,14 @@ import json
 import sqlite3
 from datetime import datetime
 
+# functions
+bad_chars = ["[", "]", '" ', ' "', "' ", " '", '"', "'"]
+bad_chars_no_space = ["[", "]", '"', "'"]
+def clean_string(exclude, string):
+    for i in exclude:
+        string = string.replace(i, '')
+    return string
+
 # create database
 connection = sqlite3.connect('client_records.sqlite')
 cursor = connection.cursor()
@@ -19,7 +27,7 @@ with open('client_records.json') as f:
 # define base columns for contacts
 columns_contacts = ['time_call_began','time_call_ended', 'call_rating', 'initial_risk_level', 'client_name', 'client_location']
 
-# loop through client_records and add data to our table 
+# loop through client_records and add data to our tables 
 # DRAW BACK: if 2 counselors have the same name there's no way to know if they're dulpicates or individuals. A unique counselor ID supplied by Trevor would help
 uniqueNames = []
 for row in client_records:
@@ -34,35 +42,27 @@ for row in client_records:
         counselor_transfers = []
         while counter < len(names):
             currentName = names[counter]
-            # initializing bad_chars_list
-            bad_chars = ["[", "]", '"', "'", "" ", " ""]
-            # using replace() to remove bad_chars
-            for i in bad_chars:
-                currentName = currentName.replace(i, '')
-            # update the unique names array if you find a novel name and add it to the table    
+            # clean names
+            currentName = (clean_string(bad_chars, currentName))  
             if counter == 0:
                 initial_counselor = currentName
+            # append unique names if found
             if currentName not in uniqueNames:
                 uniqueNames.append(currentName)
                 cursor.execute('insert into Counselors(name) values (?)', (currentName,))
+            # append counselor transfers so we can keep track for the transfer table
             counselor_transfers.append(currentName)
             counter += 1
+
     # contacts data
     contact = list(row[c] for c in columns_contacts)
-    # clean pronouns and issues strings
     pronoun = list(row[c] for c in ['client_pronouns'])
     pronouns = pronoun[0]
-    # using replace() to remove bad_chars
-    bad_chars_no_space = ["[", "]", '"', "'"]
-    for i in bad_chars_no_space:
-        pronouns = pronouns.replace(i, '')
+    pronouns = clean_string(bad_chars_no_space, pronouns)
     contact.append(pronouns)
-
     issue = list(row[c] for c in ['issues_discussed'])
     issues = issue[0]
-    # using replace() to remove bad_chars
-    for i in bad_chars_no_space:
-        issues = issues.replace(i, '')
+    issues = clean_string(bad_chars_no_space, issues)
     contact.append(issues)
     # grab the initial counselors id
     cursor.execute('SELECT id FROM Counselors WHERE name=?', (initial_counselor,))
@@ -77,8 +77,7 @@ for row in client_records:
     if total_transfers > 0:
         timestamp = tuple(row[c] for c in ['transfer_timestamps'])
         timestamps = timestamp[0]
-        for i in bad_chars_no_space:
-            timestamps = timestamps.replace(i, '')
+        timestamps = clean_string(bad_chars_no_space, timestamps)
         counter = 0
         pointer1 = 0;
         pointer2 = 19;
@@ -112,7 +111,7 @@ for row in client_records:
             dateTime_obj = datetime.strptime(dateTimeFormatted, '%Y-%m-%d %H:%M:%S')
             transfer.append(dateTime_obj)
             cursor.execute('insert into Transfers(contact_id, counselor_id, timestamp) values (?,?,?)', transfer)
-# TO DO: make transfer table
-# TO DO: if value is empty have value be nil?
+
+
 connection.commit()
 connection.close()
