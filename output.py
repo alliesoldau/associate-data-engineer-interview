@@ -1,4 +1,6 @@
 import sqlite3
+import csv
+
 connection = sqlite3.connect('client_records.sqlite')
 cursor = connection.cursor()
 # 1. Create an output csv with the data schema:
@@ -49,9 +51,16 @@ while counter < len(names):
     output_data.append(average_ratings)
     cursor.execute('insert into Output(COUNSELOR_NAME, DAY, NUMBER_OF_CASES, AVERAGE_RISK_LEVEL, AVERAGE_RATING) values (?,?,?,?,?)', output_data,)
     counter += 1
+# this will create an output csv from the Output table in the database
+cursor.execute("select * from Output")
+with open("output.csv", 'w',newline='') as csv_file: 
+    csv_writer = csv.writer(csv_file)
+    csv_writer.writerow([i[0] for i in cursor.description]) 
+    csv_writer.writerows(cursor)
 
 # 2. The maximum number of concurrent cases handled by trevor at any time
 # 3. A list of counselors who dealt with more than one concurrent cases
+
 # 4. The average risk level of people who use `She/They` pronouns
 cursor.execute('SELECT AVG(initial_risk_level) FROM Contacts WHERE client_pronouns LIKE "%She/Her%" and client_pronouns LIKE "%They/Them%"')
 average = ((cursor.fetchall())[0])[0]
