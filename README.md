@@ -1,4 +1,4 @@
-Allie Version
+_Allie's answers are in italics_
 
 # Associate Data Engineer Project Plan Interview
 > This repository contains the project plan instructions for the Associate Data Engineer role.
@@ -34,7 +34,7 @@ Any common language and database is OK for this purpose. If you make some unorth
    _cursor.execute('Create Table if not exists Transfers (id integer primary key, contact_id integer, counselor_id integer, timestamp datetime)')_
   
 5. Now, write some code to clean this data, and insert it into your database. Here are some things to think about when writing your code:
-      * _I wrote the solution in python so that it could be adapted easily to a service for automating this process._
+      * _I wrote the ETL in python so that it could be adapted easily to a service for automating this process._
       * _I opted to omit passwords and encrypting the information to simplify the solution. In a real-world-scenario this would be important._
    1. What concerns do you see?
       * _Privacy concerns_
@@ -55,13 +55,19 @@ Any common language and database is OK for this purpose. If you make some unorth
       * _I wanted to use a relational database to take advantage of joins and reduce repetitive data_
       * _This will make my SQL queries more efficient_
    4. If you were to scale your parsing code, what libraries/cloud technologies/strategies would you use to do so?
+      * _Apache Airflow: an open-source workflow management platform. I think the python would translate into this with relative ease_
+      * _Snowflake: an elastically scalable cloud data warehouse. I think it would take some more effort to translate over to snowflake but their built in Snowsql database management would be nice since it keeps everything in one platform. Also it's good for running multiple queries at once which would be beneficial for Trevor since understanding our contacts' needs is so important and because we may need to run queries to support buisness decisions like headcount and financial needs._ 
 4. Now, write queries or code to answer the following questions again your populated database:
-   * Question 1 will populate as a seperate CSV file and questions 2-4 will print to the terminal when the files are run
+   * _Question 1 populate as a seperate CSV file and questions 2-4 will print to the terminal when the files are run. I also pasted the answers for 2-4 below for easy reference._
    1. Create an output csv with the data schema:
        * | COUNSELOR NAME  | DAY  | NUMBER OF CASES  | AVERAGE RISK LEVEL  | AVERAGE RATING  |
     2. The maximum number of concurrent cases handled by trevor at any time
+      * _The maximum number of concurrent cases handled by trevor at any time is 94982 cases_
     3. A list of counselors who dealt with more than one concurrent cases
+      * _The list contains all of the counselors in the database_
+      * _The counselors who dealt with more than one concurrent cases are as follows: [['Yu Yamada'], ['Carlos Khan'], ['Yan Delacroix'], ['Marsha Tanaka'], ['Fumiko Stevens'], ['Hans Wang'], ['Hui Ivanovich'], ['Mary Farouk'], ['Mary Kim'], ['Lou Roberts'], ['Frank LópezPatel'], ['Persephone Sun'], ['Hans Yamada'], ['Claude Roberts'], ['Ibrahim Li'], ['Beth Chen'], ['Claude Kant'], ['Sri Farouk'], ['Maria Tanaka'], ['Ibrahim Tanaka'], ['Fatima Stryker'], ['Zoë Ivanovich'], ['Kumar Ali'], ['Susan Smith'], ['Olga Ramanujan']]_
     4. The average risk level of people who use `She/They` pronouns
+      * _The average risk level of people who use 'She' and 'They' pronouns is 3.010087116001834_
 
 
 # Submission
