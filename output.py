@@ -61,18 +61,45 @@ with open("output.csv", 'w',newline='') as csv_file:
 # 2. The maximum number of concurrent cases handled by trevor at any time
 # source for help with sql queries: https://stackoverflow.com/questions/3044764/finding-simultaneous-events-in-a-database-between-times
 # TO DO: understand what's going on here!!
-cursor.execute('WITH C1 AS (SELECT time_call_began AS ts, +1 AS TYPE, ROW_NUMBER() OVER(ORDER BY time_call_began) AS start_ordinal FROM Contacts UNION ALL SELECT time_call_ended, -1, NULL FROM Contacts), C2 AS (SELECT *, ROW_NUMBER() OVER(  ORDER BY ts, TYPE) AS start_or_end_ordinal FROM C1) SELECT MAX(2 * start_ordinal - start_or_end_ordinal) AS mx FROM C2 WHERE TYPE = 1') 
+cursor.execute('WITH C1 AS ( \
+                    SELECT time_call_began AS ts, +1 AS TYPE, \
+                        ROW_NUMBER() OVER(ORDER BY time_call_began) AS start_ordinal FROM Contacts \
+                    UNION ALL SELECT time_call_ended, -1, NULL FROM Contacts), \
+                C2 AS ( \
+                    SELECT *, \
+                        ROW_NUMBER() OVER(  ORDER BY ts, TYPE) AS start_or_end_ordinal \
+                    FROM C1) \
+                SELECT MAX(2 * start_ordinal - start_or_end_ordinal) AS mx FROM C2 WHERE TYPE = 1') 
 max_concurrent = (((cursor.fetchall()))[0])[0]
-print("The maximum number of concurrent cases handled by trevor at any time is", max_concurrent, "cases")
+print("\nThe maximum number of concurrent cases handled by trevor at any time is", max_concurrent, "cases")
 
 # 3. A list of counselors who dealt with more than one concurrent cases
-
+# this is very similar to how I solved for the most concurrent cases at once for trevor except I specified the counselor ids
+current_id = 1
+counter = 0
+concurrent_counselors = []
+while counter < len(names):
+    cursor.execute('SELECT id FROM Counselors WHERE name=?', [names[counter][0]])
+    current_id = ((cursor.fetchall())[0])[0]
+    cursor.execute('WITH C1 AS ( \
+                    SELECT time_call_began AS ts, +1 AS TYPE , \
+                        ROW_NUMBER() OVER(ORDER BY time_call_began) AS start_ordinal FROM Contacts WHERE initial_counselor_id=? \
+                    UNION ALL SELECT time_call_ended, -1, NULL FROM Contacts), \
+                C2 AS ( \
+                    SELECT *, \
+                        ROW_NUMBER() OVER(  ORDER BY ts, TYPE) AS start_or_end_ordinal \
+                    FROM C1) \
+                SELECT MAX(2 * start_ordinal - start_or_end_ordinal) AS mx FROM C2 WHERE TYPE = 1', (current_id,))
+    if (((cursor.fetchall()))[0])[0] > 1:
+        concurrent_counselors.append([names[counter][0]])
+    counter += 1 
+print("\nThe counselors who dealt with more than one concurrent cases are as follows:", concurrent_counselors)
 
 # 4. The average risk level of people who use `She/They` pronouns
 cursor.execute('SELECT AVG(initial_risk_level) FROM Contacts WHERE client_pronouns LIKE "%She/Her%" and client_pronouns LIKE "%They/Them%"')
 average = ((cursor.fetchall())[0])[0]
 # assuming that by She/They we mean the contact uses both She/Her and They/Them pronouns as She/They as an exact match isn't an option
-print("The average risk level of people who use 'She' and 'They' pronouns is", average)
+print("\nThe average risk level of people who use 'She' and 'They' pronouns is", average)
 
 connection.commit()
 connection.close()
