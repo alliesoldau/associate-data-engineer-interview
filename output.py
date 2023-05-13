@@ -76,7 +76,6 @@ with open("output.csv", 'w',newline='') as csv_file:
 
 # 2. The maximum number of concurrent cases handled by trevor at any time
 # source for help with sql queries: https://stackoverflow.com/questions/3044764/finding-simultaneous-events-in-a-database-between-times
-# TO DO: understand what's going on here!!
 cursor.execute("""WITH C1 AS (
                     SELECT time_call_began AS ts, +1 AS TYPE,
                         ROW_NUMBER() OVER(ORDER BY time_call_began) AS start_ordinal FROM Contacts
