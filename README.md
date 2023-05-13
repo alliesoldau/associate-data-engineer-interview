@@ -15,34 +15,48 @@ Any common language and database is OK for this purpose. If you make some unorth
 1. Clone this repository to your local computer.
 2. Review the README for instructions.
 3. Looking at the `client_records.jsonl` file, what questions do you have about the meaning of the data?
+   * _Are we assuming all counselor names are unique, or are duplicates possible?_
+   * _Do all timestamps have the same timezone? What is the timezone?_
+   * _If a chat transfers away from a counselor, and then BACK to the original counselor is that considered one chat or 2 for that counselor?_
+   * _Are we concerned with keeping track of each youth who reaches out or are we ignoring that for this case sense we normally monitor that with IP addresses?_
+   * _Why are all of these chats on the same day? A counselor having 7k+ chats at once seems off. Is this intentional? Or just a byproduct of using Faker?_
+   * _Is there a heirarchy of the order for issues discussed? Is the first issue mentioned the primary issue?_
+   * _I am assuming no duplicate contacts are recorded in the file. Is this accurate? If we are assuming duplicates I would have added in a check for duplicity in the data cleaning._
+
 4. From the format of this file, write down a database schema.
    * It's probably easiest if you turn in some equivalent to a bunch of create table statements in your return project
-    * Diagrams available at [DBDiagram](https://dbdiagram.io/d/6453cdf9dca9fb07c483a5b7).
+    * _Visual diagrams available at [DBDiagram](https://dbdiagram.io/d/6453cdf9dca9fb07c483a5b7)._
 
-   cursor.execute('Create Table if not exists Counselors (id integer primary key, name string)')
-   cursor.execute('Create Table if not exists Contacts (id integer primary key, time_call_began datetime, time_call_ended datetime, call_rating integer, initial_risk_level integer, client_name string, client_location string, client_pronouns string, issues_discussed string, initial_counselor_id integer, total_transfers integer)')
-   cursor.execute('Create Table if not exists Transfers (id integer primary key, contact_id integer, counselor_id integer, timestamp datetime)')
+   _cursor.execute('Create Table if not exists Counselors (id integer primary key, name string)')_
+
+   _cursor.execute('Create Table if not exists Contacts (id integer primary key, time_call_began datetime, time_call_ended datetime, call_rating integer, initial_risk_level integer, client_name string, client_location string, client_pronouns string, issues_discussed string, initial_counselor_id integer, total_transfers integer)')_
+
+   _cursor.execute('Create Table if not exists Transfers (id integer primary key, contact_id integer, counselor_id integer, timestamp datetime)')_
   
 5. Now, write some code to clean this data, and insert it into your database. Here are some things to think about when writing your code:
+      * _I wrote the solution in python so that it could be adapted easily to a service for automating this process._
+      * _I opted to omit passwords and encrypting the information to simplify the solution. In a real-world-scenario this would be important._
    1. What concerns do you see?
-      * Privacy concerns
-      * COPPA concerns
-      * PII concerns
-      * Values are formatted differently, eg: \"Yu Yamada"\ vs. 'Yu Yamada'
-      * Single transfer timestamps are formatted differently than mutli transfer timestamps
-      * Timestamps don't have a timezone
-      * If 2 counselors have the same name we have no way of knowing if they're 2 different people -> an improvement would be to assign each counselor a unique employee ID
+      * _Privacy concerns_
+      * _COPPA concerns_
+      * _PII concerns_
+      * _String values are formatted differently, eg: \"Yu Yamada"\ vs. 'Yu Yamada'_
+      * _Single transfer timestamps are formatted differently than mutli transfer timestamps_
+      * _Timestamps don't have a timezone_
+      * _If 2 counselors have the same name we have no way of knowing if they're 2 different people -> an improvement would be to assign each counselor a unique employee ID_
    2. What choices have you made to clean the data?
-      * Make timestamp format consistent
-      * Remove extraneous symbols from strings (like [ and "')
-      * Split data into 3 tables with joins to make data analysis cleaner
-      * Added additional columns since the data is now split up (eg: initial_counselor_id and total_transfers)
+      * _Make timestamp format consistent_
+      * _Remove extraneous characters from strings (like [ and "')_
+      * _Split data into 3 tables (Contacts, Counselors, and Transfers) with joins to make data analysis cleaner_
+         * _Each transfer gets it's own row in the Transfer table which makes it easier to access the data_
+      * _Added additional columns since the data is now split up (eg: initial_counselor_id and total_transfers)_
    3. What choices have you made about the schema? Is this a relational database schema, or a big data one? (both choices are fine, just justify and explain yourself)
-      * This is a relational database 
-      * I wanted to use a relational database to take advantage of joins and reduce repetitive data
-      * This will make my SQL queries more efficient
+      * _This is a relational database_ 
+      * _I wanted to use a relational database to take advantage of joins and reduce repetitive data_
+      * _This will make my SQL queries more efficient_
    4. If you were to scale your parsing code, what libraries/cloud technologies/strategies would you use to do so?
 4. Now, write queries or code to answer the following questions again your populated database:
+   * Question 1 will populate as a seperate CSV file and questions 2-4 will print to the terminal when the files are run
    1. Create an output csv with the data schema:
        * | COUNSELOR NAME  | DAY  | NUMBER OF CASES  | AVERAGE RISK LEVEL  | AVERAGE RATING  |
     2. The maximum number of concurrent cases handled by trevor at any time
