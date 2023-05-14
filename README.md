@@ -1,5 +1,20 @@
 _Allie's answers are in italics_
 
+# _Instructions for How to Run the Code_
+   1. _Ensure you have Python3 downloaded on your local environment._
+      * _[Link for How to Check Your Python Version](https://blog.amphy.com/how-to-check-python-version/)_
+      * _[Link to Python Download Instructions](https://www.python.org/downloads/)_
+   2. _Ensure you have Sqlite installed on your local enviornment. Use Sqlite version 3.39.5. I can't gauruntee it works with the latest version._
+      * _[Link for How to Check Your Sqlite Version](https://database.guide/check-sqlite-version/)_
+      * _[Link to Sqlite Download Instructions](https://www.sqlitetutorial.net/download-install-sqlite/)_
+   3. _Run `python3 convert_data.py` in the associate-data-engineer-interview folder in the terminal._ 
+      * _This will convert_data.py file to clean the client_records.json data and parse it into a Sqlite file called client_records.sqlite_
+      * _[Link for How to Run Python Commands in the Terminal](https://realpython.com/run-python-scripts/#:~:text=To%20run%20Python%20scripts%20with,see%20the%20phrase%20Hello%20World!)._
+   4. _Run `python3 output.py` in the associated-data-engineer-interview folder in the terminal._
+      * _This will answer questions 1-4 from the instructions_
+         * _Answer to Question 1 will be output as a CSV file called output.csv in the root folder._
+         * _Answers to Questions 2-4 will be printed in the terminal._
+
 # Associate Data Engineer Project Plan Interview
 > This repository contains the project plan instructions for the Associate Data Engineer role.
 Feel free to contact the recruiter for any follow-up questions in regards to the instructions and submissions.
@@ -58,15 +73,15 @@ Any common language and database is OK for this purpose. If you make some unorth
       * _Apache Airflow: an open-source workflow management platform. I think the python would translate into this with relative ease_
       * _Snowflake: an elastically scalable cloud data warehouse. I think it would take some more effort to translate over to snowflake but their built in Snowsql database management would be nice since it keeps everything in one platform. Also it's good for running multiple queries at once which would be beneficial for Trevor since understanding our contacts' needs is so important and because we may need to run queries to support buisness decisions like headcount and financial needs._ 
 4. Now, write queries or code to answer the following questions again your populated database:
-   * _Question 1 populate as a seperate CSV file and questions 2-4 will print to the terminal when the files are run. I also pasted the answers for 2-4 below for easy reference._
+   * _Question is 1 populate as a seperate CSV file and questions 2-4 will print to the terminal when the files are run. I also pasted the answers for 2-4 below for easy reference._
    1. Create an output csv with the data schema:
        * | COUNSELOR NAME  | DAY  | NUMBER OF CASES  | AVERAGE RISK LEVEL  | AVERAGE RATING  |
-    2. The maximum number of concurrent cases handled by trevor at any time
+   2. The maximum number of concurrent cases handled by trevor at any time
       * _The maximum number of concurrent cases handled by trevor at any time is 94982 cases_
-    3. A list of counselors who dealt with more than one concurrent cases
+   3. A list of counselors who dealt with more than one concurrent cases
       * _The list contains all of the counselors in the database_
       * _The counselors who dealt with more than one concurrent cases are as follows: [['Yu Yamada'], ['Carlos Khan'], ['Yan Delacroix'], ['Marsha Tanaka'], ['Fumiko Stevens'], ['Hans Wang'], ['Hui Ivanovich'], ['Mary Farouk'], ['Mary Kim'], ['Lou Roberts'], ['Frank LópezPatel'], ['Persephone Sun'], ['Hans Yamada'], ['Claude Roberts'], ['Ibrahim Li'], ['Beth Chen'], ['Claude Kant'], ['Sri Farouk'], ['Maria Tanaka'], ['Ibrahim Tanaka'], ['Fatima Stryker'], ['Zoë Ivanovich'], ['Kumar Ali'], ['Susan Smith'], ['Olga Ramanujan']]_
-    4. The average risk level of people who use `She/They` pronouns
+   4. The average risk level of people who use `She/They` pronouns
       * _The average risk level of people who use 'She' and 'They' pronouns is 3.010087116001834_
 
 
